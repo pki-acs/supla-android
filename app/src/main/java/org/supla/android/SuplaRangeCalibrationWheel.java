@@ -34,10 +34,17 @@ public class SuplaRangeCalibrationWheel extends View {
     private double btnRad;
     private double lastTouchedDegree;
 
+    private int colorWheel = Color.parseColor("#c6d6ef");
+    private int colorBorder = Color.parseColor("#4585e8");
+    private int colorBtn = Color.parseColor("#4585e8");
+    private int colorValue = Color.parseColor("#fee618");
+    private int colorInsideBtn = Color.WHITE;
+
     private double range = 1000;
-    private double numerOfTurns = 4;
+    private double minDistance = range * 0.1;
+    private double numerOfTurns = 5;
     private double leftEdge = 0;
-    private double rightEdge = 0;
+    private double rightEdge = range;
 
     private void init() {
         paint = new Paint();
@@ -81,6 +88,15 @@ public class SuplaRangeCalibrationWheel extends View {
         return range;
     }
 
+    public void setMinDistance(double minDistance) {
+        this.minDistance = minDistance;
+        invalidate();
+    }
+
+    public double getMinDistance() {
+        return this.minDistance;
+    }
+
     public void setNumerOfTurns(double numerOfTurns) {
         this.numerOfTurns = numerOfTurns;
         invalidate();
@@ -108,7 +124,36 @@ public class SuplaRangeCalibrationWheel extends View {
         return rightEdge;
     }
 
-    protected PointF drawButton(Canvas canvas, double rad) {
+    private void drawBtnLines(Canvas canvas, RectF rectF) {
+        final int lc = 3;
+
+        float hMargin = rectF.height() * 0.35F;
+        float wMargin = rectF.width() * 0.2F;
+
+        rectF = new RectF(rectF);
+        rectF.left+=wMargin;
+        rectF.right-=wMargin;
+        rectF.top+=hMargin;
+        rectF.bottom-=hMargin;
+
+        float step = rectF.height() / (lc-1);
+        float width = borderLineWidth*1F;
+
+        for(int a=0;a<lc;a++) {
+            RectF lineRectF = new RectF();
+            lineRectF.set(rectF.left, rectF.top+step*a-width/2,
+                    rectF.right, rectF.top+step*a+width/2);
+
+            canvas.drawRoundRect(
+                    lineRectF,
+                    15,
+                    15,
+                    paint
+            );
+        }
+    }
+
+    private PointF drawButton(Canvas canvas, double rad) {
 
         float btnSize = wheelWidth+4*borderLineWidth;
         halfBtnSize = btnSize/2;
@@ -121,24 +166,59 @@ public class SuplaRangeCalibrationWheel extends View {
         canvas.save();
         canvas.rotate((float)Math.toDegrees(rad), wheelCenterX, wheelCenterY);
 
-        paint.setColor(Color.GRAY);
+        paint.setColor(colorBtn);
         paint.setStyle(Paint.Style.FILL);
-        rectF.set(x-halfBtnSize, wheelCenterY-halfBtnSize, x+halfBtnSize, wheelCenterY+halfBtnSize);
+        rectF.set(x-halfBtnSize, wheelCenterY-halfBtnSize,
+                x+halfBtnSize, wheelCenterY+halfBtnSize);
 
         canvas.drawRoundRect(
-                rectF, // rect
-                15, // rx
-                15, // ry
-                paint // Paint
+                rectF,
+                15,
+                15,
+                paint
         );
 
-        //for(int a=0;a<3;a++) {
-        //    rectF.set(x-halfBtnSize, wheelCenterY-halfBtnSize, x+halfBtnSize, wheelCenterY+halfBtnSize);
-        //}
+        paint.setColor(colorInsideBtn);
+
+        drawBtnLines(canvas, rectF);
 
         canvas.restore();
 
         return result;
+    }
+
+    private void drawValue(Canvas canvas) {
+
+        float distance = halfBtnSize + borderLineWidth * 2;
+        float left = btnLeftCenter.x+distance;
+        float top = btnLeftCenter.y-halfBtnSize;
+        float right = btnRightCenter.x-distance;
+        float bottom = btnRightCenter.y+halfBtnSize;
+
+        float vleft = left + (float)((right-left) * leftEdge*100F/range/100F);
+        float vright = left + (float)((right-left) * rightEdge*100F/range/100F);
+
+        paint.setColor(colorValue);
+        paint.setStyle(Paint.Style.FILL);
+        rectF.set(vleft, top, vright, bottom);
+
+        canvas.drawRoundRect(
+                rectF,
+                15,
+                15,
+                paint);
+
+        paint.setColor(colorBorder);
+        paint.setStrokeWidth(borderLineWidth);
+        paint.setStyle(Paint.Style.STROKE);
+        rectF.set(left, top, right, bottom);
+
+        canvas.drawRoundRect(
+                rectF,
+                15,
+                15,
+                paint
+        );
     }
 
     @Override
@@ -153,13 +233,13 @@ public class SuplaRangeCalibrationWheel extends View {
         wheelWidth = wheelRadius * 0.25F;
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.GRAY);
+        paint.setColor(colorBorder);
         paint.setStrokeWidth(wheelWidth);
         rectF.set(wheelCenterX-wheelRadius, wheelCenterY-wheelRadius, wheelCenterX+wheelRadius, wheelCenterY+wheelRadius);
         canvas.drawOval(rectF, paint);
 
         paint.setStrokeWidth(wheelWidth-borderLineWidth*2);
-        paint.setColor(Color.RED);
+        paint.setColor(colorWheel);
         canvas.drawOval(rectF, paint);
 
         if (touched == TOUCHED_NONE) {
@@ -167,11 +247,13 @@ public class SuplaRangeCalibrationWheel extends View {
             btnLeftCenter = drawButton(canvas, (float)Math.toRadians(180));
         } else {
             if (touched == TOUCHED_RIGHT) {
-                btnRightCenter = drawButton(canvas, btnRad);
+                drawButton(canvas, btnRad);
             } else if (touched == TOUCHED_LEFT) {
-                btnLeftCenter = drawButton(canvas, btnRad);
+                drawButton(canvas, btnRad);
             }
         }
+
+        drawValue(canvas);
 
     }
 
@@ -242,8 +324,8 @@ public class SuplaRangeCalibrationWheel extends View {
                         diff = (diff*100.0/360.0)*range/100/numerOfTurns;
                         if (touched==TOUCHED_LEFT) {
                             leftEdge+=diff;
-                            if (leftEdge > rightEdge) {
-                                leftEdge = rightEdge;
+                            if (leftEdge > rightEdge-minDistance) {
+                                leftEdge = rightEdge-minDistance;
                             } else if (leftEdge > range) {
                                 leftEdge = range;
                             } else if (leftEdge < 0) {
@@ -251,8 +333,8 @@ public class SuplaRangeCalibrationWheel extends View {
                             }
                         } else {
                             rightEdge+=diff;
-                            if (rightEdge < leftEdge) {
-                                rightEdge = leftEdge;
+                            if (rightEdge < leftEdge+minDistance) {
+                                rightEdge = leftEdge+minDistance;
                             } else if (rightEdge > range) {
                                 rightEdge = range;
                             } else if (rightEdge < 0) {
@@ -260,7 +342,6 @@ public class SuplaRangeCalibrationWheel extends View {
                             }
                         }
 
-                        Log.d("Value", "Left: "+Double.toString(leftEdge)+" Right: " + Double.toString(rightEdge));
                     }
 
 
