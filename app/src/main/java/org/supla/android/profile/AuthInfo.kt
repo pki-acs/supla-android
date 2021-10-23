@@ -21,4 +21,30 @@ package org.supla.android.profile
 data class AuthInfo(val emailAuth: Boolean, 
                     val serverAutoDetect: Boolean,
                     val serverForEmail: String = "",
-                    val serverForAccessID: String = "")
+                    val serverForAccessID: String = "",
+                    val emailAddress: String = "",
+                    val accessID: Int = 0,
+                    val accessIDpwd: String = "",
+                    val preferedProtocolVarsion: Int = 0) {
+
+    /**
+     Returns server used for current authentication method
+     */
+    val serverForCurrentAuthMethod: String 
+        get() = if(emailAuth) serverForEmail else serverForAccessID
+
+    /**
+     A flag indicating if current authentication settings
+     are complete (but not necessarily correct).
+     */
+    val isAuthDataComplete: Boolean 
+        get() {
+            if(emailAuth) {
+                return !emailAddress.isEmpty() &&
+                (serverAutoDetect || !serverForCurrentAuthMethod.isEmpty())
+            } else {
+                return !serverForCurrentAuthMethod.isEmpty() &&
+                    accessID > 0 && !accessIDpwd.isEmpty()
+            }
+        }
+}

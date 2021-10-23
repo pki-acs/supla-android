@@ -154,59 +154,9 @@ public class Preferences {
         return getRandom(pref_authkey, SuplaConst.SUPLA_AUTHKEY_SIZE);
     }
 
-    public String getServerAddress() {
-        return _prefs.getString(pref_serveraddr, "");
-    }
-
-    public void setServerAddress(String ServerAddress) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_serveraddr, ServerAddress.trim());
-        editor.apply();
-    }
-
-    public int getAccessID() {
-        return _prefs.getInt(pref_accessid, 0);
-    }
-
-    public void setAccessID(int AccessID) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_accessid, AccessID);
-        editor.apply();
-    }
-
-    public String getAccessIDpwd() {
-        return _prefs.getString(pref_accessidpwd, "");
-    }
-
-    public void setAccessIDpwd(String AccessIDpwd) {
-
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_accessidpwd, AccessIDpwd.trim());
-        editor.apply();
-    }
-
-    public String getEmail() {
-        return _prefs.getString(pref_email, "");
-    }
-
-    public void setEmail(String email) {
-
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putString(pref_email, email.trim());
-        editor.apply();
-    }
-
     public boolean configIsSet() {
-        ProfileManager pm = SuplaApp.getApp().getProfileManager(_context);
-        AuthInfo authInfo = pm.getAuthInfo();
-
-        if(authInfo.getEmailAuth()) {
-            return !getEmail().equals("") && 
-                (authInfo.getServerAutoDetect() || !getServerAddress().equals(""));
-        } else {
-            return !getServerAddress().equals("") && getAccessID() != 0 && 
-                !getAccessIDpwd().equals("");
-        }
+        return SuplaApp.getApp().getProfileManager(_context)
+            .getAuthInfo().getIsAuthDataComplete();
     }
 
     public boolean isAdvancedCfg() {
@@ -217,22 +167,6 @@ public class Preferences {
         SharedPreferences.Editor editor = _prefs.edit();
         editor.putBoolean(pref_advanced, advanced);
         editor.apply();
-    }
-
-    public int getPreferedProtocolVersion() {
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        return _prefs.getInt(pref_proto_ver, client == null ? 0 : client.getMaxProtoVersion());
-    }
-
-    public void setPreferedProtocolVersion(int version) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_proto_ver, version);
-        editor.apply();
-    }
-
-    public void setPreferedProtocolVersion() {
-        SuplaClient client = SuplaApp.getApp().getSuplaClient();
-        setPreferedProtocolVersion(client == null ? 0 : client.getMaxProtoVersion());
     }
 
     public boolean wizardSavePasswordEnabled(String SSID) {
