@@ -35,7 +35,8 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
-import org.supla.android.profile.*;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -1342,12 +1343,12 @@ public class SuplaClient extends Thread {
     }
 
     private boolean isAccessIDAuthentication() {
-        ProfileManager pm = new SingleAccountProfileManager(_context);
+        ProfileManager pm = SuplaApp.getApp().getProfileManager(_context);
         return !pm.getAuthInfo().getEmailAuth();
     }
 
     private boolean shouldAutodiscoverHost() {
-        ProfileManager pm = new SingleAccountProfileManager(_context);
+        ProfileManager pm = SuplaApp.getApp().getProfileManager(_context);
         return pm.getAuthInfo().getServerAutoDetect();
     }
 }

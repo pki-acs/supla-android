@@ -29,7 +29,8 @@ import android.util.Base64;
 import org.supla.android.cfg.TemperatureUnit;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.profile.*;
+import org.supla.android.profile.ProfileManager;
+import org.supla.android.profile.AuthInfo;
 
 import java.util.Random;
 
@@ -196,7 +197,7 @@ public class Preferences {
     }
 
     public boolean configIsSet() {
-        ProfileManager pm = new SingleAccountProfileManager(_context);
+        ProfileManager pm = SuplaApp.getApp().getProfileManager(_context);
         AuthInfo authInfo = pm.getAuthInfo();
 
         if(authInfo.getEmailAuth()) {
