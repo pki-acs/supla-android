@@ -1,5 +1,4 @@
-package org.supla.android.data.source
- 
+package org.supla.android.profile
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,13 +17,14 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.AuthProfileItem
 
+import android.content.Context
 
-interface ProfileRepository {
-    fun createNamedProfile(name: String): Long
-    val allProfiles: List<AuthProfileItem>
-    fun getProfile(id: Long): AuthProfileItem?
-    fun deleteProfile(id: Long)
-    fun updateProfile(profile: AuthProfileItem)
+class MultiAccountProfileManager(private val context: Context): ProfileManager {
+    
+    override fun getAuthInfo(): AuthInfo {
+
+    }
+
+    override fun storeAuthInfo(info: AuthInfo)  
 }

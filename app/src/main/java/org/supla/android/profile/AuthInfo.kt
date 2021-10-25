@@ -17,6 +17,7 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.db.DbItem
 
 data class AuthInfo(val emailAuth: Boolean, 
                     val serverAutoDetect: Boolean,
@@ -25,7 +26,7 @@ data class AuthInfo(val emailAuth: Boolean,
                     val emailAddress: String = "",
                     val accessID: Int = 0,
                     val accessIDpwd: String = "",
-                    val preferedProtocolVarsion: Int = 0) {
+                    val preferredProtocolVarsion: Int = 0) {
 
     /**
      Returns server used for current authentication method

@@ -20,6 +20,14 @@ package org.supla.android.profile
 
 
 interface ProfileManager {
-    fun getAuthInfo(): AuthInfo
+
+    /**
+     Returns current profile authentication data.
+     */
+    fun getCurrentProfile(): AuthProfileItem
+
+    /**
+     Updates current profile authentication data.
+     */
     fun storeAuthInfo(info: AuthInfo)
 }

@@ -50,7 +50,7 @@ import io.reactivex.rxjava3.core.Completable;
 
 public class DbHelper extends BaseDbHelper {
 
-    public static final int DATABASE_VERSION = 18;
+    public static final int DATABASE_VERSION = 19;
     private static final String DATABASE_NAME = "supla.db";
     private static final Object mutex = new Object();
 
@@ -168,6 +168,19 @@ public class DbHelper extends BaseDbHelper {
         execSQL(db, SQL_CREATE_CHANNELEXTENDEDVALUE_TABLE);
         createIndex(db, SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
                 SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID);
+    }
+
+    private void createAuthProfileTable(SQLiteDatabase db) {
+        final String SQL_CREATE_AUTHPROFILE_TABLE = "CREATE TABLE " +
+            SuplaContract.AuthProfileEntry.TABLE_NAME + " (" +
+            SuplaContract.AuthProfileEntry._ID + " INTEGER PRIMARY KEY," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME + " TEXT NOT NULL UNIQUE," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + " INTEGER," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT)";
+
+        execSQL(db, SQL_CREATE_AUTHPROFILE_TABLE);
     }
 
     private void createChannelView(SQLiteDatabase db) {
@@ -361,7 +374,8 @@ public class DbHelper extends BaseDbHelper {
         createChannelGroupRelationTable(db);
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
-        
+        createAuthProfileTable(db);
+
         // Create views at the end
         createChannelView(db);
         createChannelGroupValueView(db);
@@ -494,6 +508,12 @@ public class DbHelper extends BaseDbHelper {
                 + " INTEGER NOT NULL default 0");
     }
 
+    private void upgradeToV19(SQLiteDatabase db) {
+        createAuthProfileTable(db);
+        insertDefaultProfile(db);
+        alterTablesToReferProfile(db);
+    }
+
     private void recreateViews(SQLiteDatabase db) {
         execSQL(db, "DROP VIEW IF EXISTS "
                 + SuplaContract.ChannelViewEntry.VIEW_NAME);
@@ -543,6 +563,9 @@ public class DbHelper extends BaseDbHelper {
                         break;
                     case 16:
                         upgradeToV17(db);
+                        break;
+                    case 18:
+                        upgradeToV19(db);
                         break;
                 }
             }

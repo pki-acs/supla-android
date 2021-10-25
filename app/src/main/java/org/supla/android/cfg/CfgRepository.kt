@@ -42,24 +42,16 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
     override fun getCfg(): CfgData {
         val info = pm.getAuthInfo()
-        var emailServerHeuristicValue =  if(info.serverForEmail.isEmpty()) prefs.serverAddress else info.serverForEmail
-        return CfgData(emailServerHeuristicValue, 
-                       prefs.accessID, 
-                       prefs.accessIDpwd,
-                       prefs.email, 
-                       prefs.isAdvancedCfg, 
-                       info.emailAuth, 
-                       prefs.temperatureUnit,
+        var emailServerHeuristicValue = "" //FIXME: migrate settings if(info.serverForEmail.isEmpty()) prefs.serverAddress else info.serverForEmail
+        return CfgData(prefs.temperatureUnit,
                        prefs.isButtonAutohide,
                        ChannelHeight.values().firstOrNull { it.percent == prefs.channelHeight } ?: ChannelHeight.HEIGHT_100,
-                       info.serverAutoDetect,
-                       info.serverForAccessID,
                        prefs.isShowChannelInfo)
     }
 
 
     override fun storeCfg(cfg: CfgData) {
-        helper.deleteUserIcons() // TODO: I'm not sure if this is the right place for this yet.
+        helper.deleteUserIcons() // FIXME: move to profile manager
         prefs.accessID = cfg.accessID.value ?: 0
         prefs.accessIDpwd = cfg.accessIDpwd.value
         prefs.email = cfg.email.value

@@ -58,6 +58,10 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     private val _serverAutoDiscovery = MutableLiveData<Boolean>(cfgData.isServerAuto.value)
     val serverAutoDiscovery: LiveData<Boolean> = _serverAutoDiscovery
 
+    private val _emailAddress: MutableLiveData<String>
+    val emailAddress: LiveData<String> = _emailAddress
+
+
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
     val saveEnabled = MutableLiveData<Boolean>(true)
@@ -75,11 +79,13 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
 
     init {
-        val email = cfgData.email.value
-        _emailObserver = Observer { if(it != email) setNeedsReauth() }
-        val serverAddr = cfgData.serverAddr.value
-        _serverAddrObserver = Observer<String> { if(it != serverAddr) setNeedsReauth() }
-        val accessID = accessID.value ?: ""
+        val pm = SuplaApp.getApp().getProfileManager(this)
+        val authInfo = pm.getAuthInfo()
+       
+        _emailObserver = Observer { if(it != authInfo.emailAddress) setNeedsReauth() }
+//        val serverAddr = cfgData.serverAddr.value
+//        _serverAddrObserver = Observer<String> { if(it != serverAddr) setNeedsReauth() }
+/*        val accessID = accessID.value ?: ""
         _accessIDObserver = Observer<String> { if(it != accessID) {
                                                    setNeedsReauth()
                                                }                                   
@@ -118,16 +124,17 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         cfgData.serverAddr.observeForever(_serverAddrObserver)
         this.accessID.observeForever(_accessIDObserver)
         cfgData.accessIDpwd.observeForever(_accessIDPwdObserver)
-        cfgData.isAdvanced.observeForever(_advancedObserver)
+        cfgData.isAdvanced.observeForever(_advancedObserver) */
 
     }
 
     override fun onCleared() {
-        cfgData.email.removeObserver(_emailObserver)
-        cfgData.serverAddr.removeObserver(_serverAddrObserver)
-        accessID.removeObserver(_accessIDObserver)
-        cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
-        cfgData.isAdvanced.removeObserver(_advancedObserver)
+        emailAddress.removeAllObservers()
+//        cfgData.email.removeObserver(_emailObserver)
+//        cfgData.serverAddr.removeObserver(_serverAddrObserver)
+//        accessID.removeObserver(_accessIDObserver)
+//        cfgData.accessIDpwd.removeObserver(_accessIDPwdObserver)
+//        cfgData.isAdvanced.removeObserver(_advancedObserver)
 
         super.onCleared()
     }
