@@ -58,16 +58,14 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
     private val _serverAutoDiscovery = MutableLiveData<Boolean>(cfgData.isServerAuto.value)
     val serverAutoDiscovery: LiveData<Boolean> = _serverAutoDiscovery
 
-    private val _emailAddress: MutableLiveData<String>
-    val emailAddress: LiveData<String> = _emailAddress
+    val emailAddress: MutableLiveData<String>
 
 
     private val _didSaveConfig = MutableLiveData<Boolean>(false)
     val didSaveConfig: LiveData<Boolean> get() = _didSaveConfig
     val saveEnabled = MutableLiveData<Boolean>(true)
 
-    private val _isAdvancedMode = MutableLiveData<Boolean>(cfgData.isAdvanced.value)
-    val isAdvancedMode: LiveData<Boolean> = _isAdvancedMode
+    val isAdvancedMode = MutableLiveData<Boolean>(cfgData.isAdvanced.value)
 
     val nextAction = MutableLiveData<NavigationFlow?>()
 
