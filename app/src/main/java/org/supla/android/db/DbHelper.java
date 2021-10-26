@@ -176,9 +176,13 @@ public class DbHelper extends BaseDbHelper {
             SuplaContract.AuthProfileEntry._ID + " INTEGER PRIMARY KEY," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME + " TEXT NOT NULL UNIQUE," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR + " TEXT," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_ACCESS_ID + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_EMAIL + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_AUTO_DETECT + " INTEGER NOT NULL," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_AUTH + " INTEGER NOT NULL," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + " INTEGER," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT)";
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION + " INTEGER)";
 
         execSQL(db, SQL_CREATE_AUTHPROFILE_TABLE);
     }
@@ -348,20 +352,12 @@ public class DbHelper extends BaseDbHelper {
     }
 
     private void insertDefaultProfile(SQLiteDatabase db) {
-        final String SQL_INSERT = "INSERT INTO " +
-            SuplaContract.AuthProfileEntry.TABLE_NAME + " (" +
-            SuplaContract.AuthProfileEntry._ID + ", " +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME + ", " +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR + ", " +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR + ", " +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + ", " +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD +
-            ") VALUES (?, ?, ?, ?, ?, ?)";
-        /* FIXME: delegate to dao */
+        /* NOTE: V19 doesn't do this here. Should be somehow
+           addressed in ProfileManager. */
     }
 
     private void alterTablesToReferProfile(SQLiteDatabase db) {
-        
+        /* NOTE: V19 doesn't have relationships yet. */
     }
 
     @Override
@@ -510,7 +506,6 @@ public class DbHelper extends BaseDbHelper {
 
     private void upgradeToV19(SQLiteDatabase db) {
         createAuthProfileTable(db);
-        insertDefaultProfile(db);
         alterTablesToReferProfile(db);
     }
 

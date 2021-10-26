@@ -43,7 +43,6 @@ public class Preferences {
     private static final String pref_email = "pref_email";
     private static final String pref_authkey = "pref_authkey";
     private static final String pref_advanced = "pref_advanced";
-    private static final String pref_cfg_ver = "pref_cfg_ver";
     private static final String pref_proto_ver = "pref_proto_ver";
     private static final String pref_wizard_save_password = "pref_wizard_save_password";
     private static final String pref_wizard_password = "pref_wizard_password";
@@ -65,24 +64,9 @@ public class Preferences {
         _prefs = PreferenceManager.getDefaultSharedPreferences(context);
         _context = context;
 
-        if (getCfgVersion() == 0) {
-
-            setAdvancedCfg(!getServerAddress().isEmpty() && getAccessID() != 0 && !getAccessIDpwd().isEmpty());
-            setCfgVersion(2);
-        }
-
         context.getContentResolver();
     }
 
-    private int getCfgVersion() {
-        return _prefs.getInt(pref_cfg_ver, 0);
-    }
-
-    public void setCfgVersion(int version) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putInt(pref_cfg_ver, version);
-        editor.apply();
-    }
 
     private String getDeviceID() {
         String Id = null;
@@ -156,7 +140,7 @@ public class Preferences {
 
     public boolean configIsSet() {
         return SuplaApp.getApp().getProfileManager(_context)
-            .getCurrentProfile().getAuthInfo().getIsAuthDataComplete();
+            .getCurrentProfile().getAuthInfo().isAuthDataComplete();
     }
 
     public boolean isAdvancedCfg() {
