@@ -31,24 +31,9 @@ enum class ChannelHeight(val percent: Int) {
 data class CfgData(private var _temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
                    private var _buttonAutohide: Boolean = true,
                    private var _channelHeight: ChannelHeight = ChannelHeight.HEIGHT_100,
-                   private var _serverAddrAccessID: String,
                    private var _showChannelInfo: Boolean) {
     val temperatureUnit = MutableLiveData<TemperatureUnit>(_temperatureUnit)
     val buttonAutohide = MutableLiveData<Boolean>(_buttonAutohide)
     val channelHeight = MutableLiveData<ChannelHeight>(_channelHeight)
-    val isServerAuto = MutableLiveData<Boolean>(_isServerAuto)
     val showChannelInfo = MutableLiveData<Boolean>(_showChannelInfo)
-
-    init {
-        if(_authByEmail === null) {
-            /*
-                To support backward compatibility try
-                to derive the setting value using other
-                parameters.
-             */
-            authByEmail = MutableLiveData(_accessID == 0)
-        } else {
-            authByEmail = MutableLiveData(_authByEmail!!)
-        }
-    }
 }

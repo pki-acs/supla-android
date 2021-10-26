@@ -1344,11 +1344,11 @@ public class SuplaClient extends Thread {
 
     private boolean isAccessIDAuthentication() {
         ProfileManager pm = SuplaApp.getApp().getProfileManager(_context);
-        return !pm.getAuthInfo().getEmailAuth();
+        return !pm.getCurrentProfile().getAuthInfo().getEmailAuth();
     }
 
     private boolean shouldAutodiscoverHost() {
         ProfileManager pm = SuplaApp.getApp().getProfileManager(_context);
-        return pm.getAuthInfo().getServerAutoDetect();
+        return pm.getCurrentProfile().getAuthInfo().getServerAutoDetect();
     }
 }

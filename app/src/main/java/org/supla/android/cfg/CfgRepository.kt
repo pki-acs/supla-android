@@ -31,17 +31,17 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
     private val prefs: Preferences
     private val helper: DbHelper
     private val context: Context
-    private val pm: ProfileManager
+//    private val pm: ProfileManager
 
     init {
         prefs = Preferences(ctx)
 	      helper = DbHelper.getInstance(ctx)
-        pm = SingleAccountProfileManager(ctx)
+//        pm = SingleAccountProfileManager(ctx)
         context = ctx
     }
 
     override fun getCfg(): CfgData {
-        val info = pm.getAuthInfo()
+//        val info = pm.getAuthInfo()
         var emailServerHeuristicValue = "" //FIXME: migrate settings if(info.serverForEmail.isEmpty()) prefs.serverAddress else info.serverForEmail
         return CfgData(prefs.temperatureUnit,
                        prefs.isButtonAutohide,
@@ -51,18 +51,12 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
 
 
     override fun storeCfg(cfg: CfgData) {
-        helper.deleteUserIcons() // FIXME: move to profile manager
+        /* FIXME: move to profile manager
+        helper.deleteUserIcons()
         prefs.accessID = cfg.accessID.value ?: 0
         prefs.accessIDpwd = cfg.accessIDpwd.value
         prefs.email = cfg.email.value
-        prefs.temperatureUnit = cfg.temperatureUnit.value
-
         prefs.isAdvancedCfg = cfg.isAdvanced.value ?: false
-
-        prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
-        prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
-        prefs.isShowChannelInfo = cfg.showChannelInfo.value ?: true
-
         val emailAuth = cfg.authByEmail.value!! || !cfg.isAdvanced.value!!
         val info = pm.getAuthInfo()
             .copy(emailAuth = emailAuth,
@@ -80,6 +74,12 @@ class PrefsCfgRepositoryImpl(ctx: Context): CfgRepository {
         } else {
             prefs.serverAddress = info.serverForAccessID
         }
+         */
+        prefs.temperatureUnit = cfg.temperatureUnit.value
+        prefs.isButtonAutohide = cfg.buttonAutohide.value ?: true
+        prefs.channelHeight = cfg.channelHeight.value?.percent ?: 100
+        prefs.isShowChannelInfo = cfg.showChannelInfo.value ?: true
+
     }
 
 }

@@ -156,7 +156,7 @@ public class Preferences {
 
     public boolean configIsSet() {
         return SuplaApp.getApp().getProfileManager(_context)
-            .getAuthInfo().getIsAuthDataComplete();
+            .getCurrentProfile().getAuthInfo().getIsAuthDataComplete();
     }
 
     public boolean isAdvancedCfg() {

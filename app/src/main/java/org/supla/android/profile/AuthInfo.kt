@@ -26,7 +26,7 @@ data class AuthInfo(val emailAuth: Boolean,
                     val emailAddress: String = "",
                     val accessID: Int = 0,
                     val accessIDpwd: String = "",
-                    val preferredProtocolVarsion: Int = 0) {
+                    val preferredProtocolVersion: Int = 0) {
 
     /**
      Returns server used for current authentication method

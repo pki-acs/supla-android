@@ -24,7 +24,7 @@ import android.database.Cursor
 import android.content.ContentValues
 
 data class AuthProfileItem(var name: String = "",
-                           var authInfo: AuthInfo? = null,
+                           var authInfo: AuthInfo,
                            var advancedAuthSetup: Boolean) : DbItem() {
 
     override fun AssignCursorData(cur: Cursor) {

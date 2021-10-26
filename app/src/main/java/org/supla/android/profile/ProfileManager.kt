@@ -18,16 +18,18 @@ package org.supla.android.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.db.AuthProfileItem
+
 
 interface ProfileManager {
 
     /**
-     Returns current profile authentication data.
+     Returns current profile.
      */
     fun getCurrentProfile(): AuthProfileItem
 
     /**
-     Updates current profile authentication data.
+     Updates current profile.
      */
-    fun storeAuthInfo(info: AuthInfo)
+    fun storeCurrentProfile(profile: AuthProfileItem)
 }

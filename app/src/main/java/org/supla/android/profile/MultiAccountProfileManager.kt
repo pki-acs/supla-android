@@ -19,12 +19,15 @@ package org.supla.android.profile
 
 
 import android.content.Context
+import org.supla.android.db.AuthProfileItem
 
 class MultiAccountProfileManager(private val context: Context): ProfileManager {
     
-    override fun getAuthInfo(): AuthInfo {
-
+    override fun getCurrentProfile(): AuthProfileItem {
+        TODO()
     }
 
-    override fun storeAuthInfo(info: AuthInfo)  
+    override fun storeCurrentProfile(info: AuthProfileItem) {
+        TODO()
+    } 
 }

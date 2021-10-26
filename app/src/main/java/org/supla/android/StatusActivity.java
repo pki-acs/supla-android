@@ -221,7 +221,7 @@ public class StatusActivity extends NavigationActivity {
                     || error.ResultCode == SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED)) {
 
             ProfileManager pm = SuplaApp.getApp().getProfileManager(this);
-            if (pm.getAuthInfo().getEmailAuth()) {
+            if (pm.getCurrentProfile().getAuthInfo().getEmailAuth()) {
                 if (authorizationDialog == null) {
                     authorizationDialog = new SuperuserAuthorizationDialog(this);
                 }

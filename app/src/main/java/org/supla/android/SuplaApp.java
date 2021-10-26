@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import org.supla.android.cfg.CfgRepository;
 import org.supla.android.cfg.PrefsCfgRepositoryImpl;
 import org.supla.android.profile.ProfileManager;
-import org.supla.android.profile.SingleAccountProfileManager;
+import org.supla.android.profile.MultiAccountProfileManager;
 import org.supla.android.data.presenter.TemperaturePresenter;
 import org.supla.android.data.presenter.TemperaturePresenterImpl;
 
@@ -80,7 +80,7 @@ public class SuplaApp extends MultiDexApplication implements SuplaClientMessageH
     }
 
     public ProfileManager getProfileManager(Context ctx) {
-        return new SingleAccountProfileManager(ctx);
+        return new MultiAccountProfileManager(ctx);
     }
 
     public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {
