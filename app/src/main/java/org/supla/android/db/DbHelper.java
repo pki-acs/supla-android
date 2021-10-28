@@ -186,7 +186,8 @@ public class DbHelper extends BaseDbHelper {
             SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_AUTH + " INTEGER NOT NULL," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + " INTEGER," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION + " INTEGER)";
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION + " INTEGER," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE + " INTEGER)";
 
         execSQL(db, SQL_CREATE_AUTHPROFILE_TABLE);
     }
@@ -378,7 +379,7 @@ public class DbHelper extends BaseDbHelper {
         createChannelGroupRelationTable(db);
         createChannelExtendedValueTable(db);
         createUserIconsTable(db);
-        createAuthProfileTable(db);
+        upgradeToV19(db);
 
         // Create views at the end
         createChannelView(db);
@@ -514,6 +515,7 @@ public class DbHelper extends BaseDbHelper {
 
     private void upgradeToV19(SQLiteDatabase db) {
         createAuthProfileTable(db);
+        insertDefaultProfile(db);
         alterTablesToReferProfile(db);
     }
 

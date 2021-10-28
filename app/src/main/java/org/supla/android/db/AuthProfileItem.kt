@@ -49,6 +49,7 @@ data class AuthProfileItem(var name: String = "",
                             accessIDpwd = string(cur, 8),
                             preferredProtocolVersion = cur.getInt(9)
         )
+        isActive = cur.getInt(10) > 0
     }
 
     override fun getContentValues(): ContentValues {
@@ -62,6 +63,7 @@ data class AuthProfileItem(var name: String = "",
         vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID, authInfo.accessID)
         vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD, authInfo.accessIDpwd)
         vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION, authInfo.preferredProtocolVersion)
+        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, if(isActive) 1 else 0);
 
         return vals
     }
