@@ -19,9 +19,10 @@ package org.supla.android.profile
  */
 
 import android.content.Context
-
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.Preferences
+import org.supla.android.SuplaApp
 
 /**
 ProfileMigrator is a utility class which only task is
@@ -31,13 +32,50 @@ stored in application preferences) or for usage in
 new app installations.
 */
 class ProfileMigrator(private val ctx: Context) {
+
+    companion object {
+        private const val pref_serveraddr = "pref_serveraddr"
+        private const val pref_accessid = "pref_accessid"
+        private const val pref_accessidpwd = "pref_accessidpwd"
+        private const val pref_email = "pref_email"
+        private const val pref_advanced = "pref_advanced"
+        private const val pref_proto_ver = "pref_proto_ver"
+
+    }
+
+    private val prefs: SharedPreferences
+
+    init {
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctx)
+    }
     
     /**
      @returns a profile item object populated with
      values derived from application preferences.
      */
     fun makeProfileUsingPreferences(): AuthProfileItem {
+
+        val serverAddr = prefs.getString(pref_serveraddr, "") ?: ""
+        val accessID = prefs.getInt(pref_accessid, 0)
+        val accessIDpwd = prefs.getString(pref_accessidpwd, "") ?: ""
+        val email = prefs.getString(pref_email, "") ?: ""
+        val isAdvanced = prefs.getBoolean(pref_advanced, false)
+
+        val client = SuplaApp.getApp().getSuplaClient()
+        val protoVer = prefs.getInt(pref_proto_ver, if(client != null) 
+                                    client.getMaxProtoVersion() else 0)        
         
-        val ai = AuthInfo()
+        val ai = AuthInfo(emailAuth = !isAdvanced, 
+                          serverAutoDetect = !isAdvanced && 
+                          (serverAddr?.isEmpty() ?: false),
+                          serverForEmail = if(isAdvanced) "" else serverAddr,
+                          serverForAccessID = if(isAdvanced) serverAddr else "",
+                          accessID = accessID,
+                          accessIDpwd = accessIDpwd,
+                          preferredProtocolVersion = protoVer)
+
+        return AuthProfileItem(authInfo = ai,
+                               advancedAuthSetup = isAdvanced,
+                               isActive = true)
     }
 }

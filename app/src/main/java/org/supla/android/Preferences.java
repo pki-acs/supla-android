@@ -37,13 +37,7 @@ import java.util.Random;
 public class Preferences {
 
     private static final String pref_guid = "pref_guid";
-    private static final String pref_serveraddr = "pref_serveraddr";
-    private static final String pref_accessid = "pref_accessid";
-    private static final String pref_accessidpwd = "pref_accessidpwd";
-    private static final String pref_email = "pref_email";
     private static final String pref_authkey = "pref_authkey";
-    private static final String pref_advanced = "pref_advanced";
-    private static final String pref_proto_ver = "pref_proto_ver";
     private static final String pref_wizard_save_password = "pref_wizard_save_password";
     private static final String pref_wizard_password = "pref_wizard_password";
     private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
@@ -54,7 +48,6 @@ public class Preferences {
     private static final String pref_temperature_unit = "pref_temperature_unit";
     private static final String pref_button_autohide = "pref_button_autohide";
     public static final String pref_channel_height = "pref_channel_height_percent";
-    public static final String pref_active_profile = "pref_active_profile";
     private static final String pref_show_channel_info = "pref_show_channel_info";
 
     private SharedPreferences _prefs;
@@ -143,16 +136,6 @@ public class Preferences {
             .getCurrentProfile().getAuthInfo().isAuthDataComplete();
     }
 
-    public boolean isAdvancedCfg() {
-        return _prefs.getBoolean(pref_advanced, false);
-    }
-
-    public void setAdvancedCfg(Boolean advanced) {
-        SharedPreferences.Editor editor = _prefs.edit();
-        editor.putBoolean(pref_advanced, advanced);
-        editor.apply();
-    }
-
     public boolean wizardSavePasswordEnabled(String SSID) {
         return _prefs.getBoolean(pref_wizard_save_password + SSID, true);
     }
@@ -232,16 +215,6 @@ public class Preferences {
     public void setChannelHeight(int val) {
         SharedPreferences.Editor ed = _prefs.edit();
         ed.putInt(pref_channel_height, val);
-        ed.apply();
-    }
-
-    public long getActiveProfileId() {
-        return _prefs.getLong(pref_active_profile, 0);
-    }
-
-    public void setActiveProfileId(long val) {
-        SharedPreferences.Editor ed = _prefs.edit();
-        ed.putLong(pref_active_profile, val);
         ed.apply();
     }
 

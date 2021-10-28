@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
@@ -29,10 +30,13 @@ import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.DefaultColorListRepository;
 import org.supla.android.data.source.DefaultUserIconRepository;
 import org.supla.android.data.source.UserIconRepository;
+import org.supla.android.data.source.ProfileRepository;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.data.source.local.LocalProfileRepository;
+import org.supla.android.profile.ProfileMigrator;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -352,8 +356,12 @@ public class DbHelper extends BaseDbHelper {
     }
 
     private void insertDefaultProfile(SQLiteDatabase db) {
-        /* NOTE: V19 doesn't do this here. Should be somehow
-           addressed in ProfileManager. */
+        ProfileRepository repo = new LocalProfileRepository(this);
+        ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
+        AuthProfileItem itm = migrator.makeProfileUsingPreferences();
+        Long profileId = repo.createNamedProfile(itm.getName());
+        itm.setId(profileId);
+        repo.updateProfile(itm);
     }
 
     private void alterTablesToReferProfile(SQLiteDatabase db) {

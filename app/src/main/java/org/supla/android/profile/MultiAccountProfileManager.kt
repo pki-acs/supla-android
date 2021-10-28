@@ -20,11 +20,14 @@ package org.supla.android.profile
 
 import android.content.Context
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.data.source.ProfileRepository
 
-class MultiAccountProfileManager(private val context: Context): ProfileManager {
+class MultiAccountProfileManager(private val context: Context,
+                                 private val repo: ProfileRepository): ProfileManager {
     
+
     override fun getCurrentProfile(): AuthProfileItem {
-        TODO()
+        return repo.allProfiles.filter { it.isActive == true }.first()
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {

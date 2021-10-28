@@ -384,9 +384,9 @@ public class AddDeviceWizardActivity extends WizardActivity implements
 
         cleanUp();
 
-        Preferences prefs = new Preferences(this);
-
-        if (prefs.isAdvancedCfg()) {
+        boolean isAdvanced = SuplaApp.getApp().getProfileManager(this)
+            .getCurrentProfile().getAdvancedAuthSetup();
+        if (isAdvanced) {
 
             showError(R.string.add_wizard_is_not_available);
             return;
