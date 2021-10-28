@@ -19,14 +19,14 @@ package org.supla.android.profile
 
 import org.supla.android.db.DbItem
 
-data class AuthInfo(val emailAuth: Boolean, 
-                    val serverAutoDetect: Boolean,
-                    val serverForEmail: String = "",
-                    val serverForAccessID: String = "",
-                    val emailAddress: String = "",
-                    val accessID: Int = 0,
-                    val accessIDpwd: String = "",
-                    val preferredProtocolVersion: Int = 0) {
+data class AuthInfo(var emailAuth: Boolean, 
+                    var serverAutoDetect: Boolean,
+                    var serverForEmail: String = "",
+                    var serverForAccessID: String = "",
+                    var emailAddress: String = "",
+                    var accessID: Int = 0,
+                    var accessIDpwd: String = "",
+                    var preferredProtocolVersion: Int = 0) {
 
     /**
      Returns server used for current authentication method

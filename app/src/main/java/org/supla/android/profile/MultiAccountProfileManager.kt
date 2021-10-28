@@ -27,7 +27,16 @@ class MultiAccountProfileManager(private val context: Context): ProfileManager {
         TODO()
     }
 
-    override fun storeCurrentProfile(info: AuthProfileItem) {
+    override fun updateCurrentProfile(profile: AuthProfileItem) {
         TODO()
     } 
+
+    override fun getCurrentAuthInfo(): AuthInfo {
+        return getCurrentProfile().authInfo
+    }
+
+    override fun updateCurrentAuthInfo(info: AuthInfo) {
+        val profile = getCurrentProfile().copy(authInfo = info)
+        updateCurrentProfile(profile)
+    }
 }

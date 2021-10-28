@@ -31,5 +31,15 @@ interface ProfileManager {
     /**
      Updates current profile.
      */
-    fun storeCurrentProfile(profile: AuthProfileItem)
+    fun updateCurrentProfile(profile: AuthProfileItem)
+
+    /**
+     Get authentication settings of current profile.
+     */
+    fun getCurrentAuthInfo(): AuthInfo
+
+    /**
+     Update authentication settings of current profile.
+     */
+    fun updateCurrentAuthInfo(info: AuthInfo)
 }
