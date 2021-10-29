@@ -30,12 +30,10 @@ import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.DefaultColorListRepository;
 import org.supla.android.data.source.DefaultUserIconRepository;
 import org.supla.android.data.source.UserIconRepository;
-import org.supla.android.data.source.ProfileRepository;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.ColorListDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.UserIconDao;
-import org.supla.android.data.source.local.LocalProfileRepository;
 import org.supla.android.profile.ProfileMigrator;
 import org.supla.android.images.ImageCacheProvider;
 import org.supla.android.lib.SuplaChannel;
@@ -357,12 +355,10 @@ public class DbHelper extends BaseDbHelper {
     }
 
     private void insertDefaultProfile(SQLiteDatabase db) {
-        ProfileRepository repo = new LocalProfileRepository(this);
         ProfileMigrator migrator = new ProfileMigrator(SuplaApp.getApp());
         AuthProfileItem itm = migrator.makeProfileUsingPreferences();
-        Long profileId = repo.createNamedProfile(itm.getName());
-        itm.setId(profileId);
-        repo.updateProfile(itm);
+        db.insert(SuplaContract.AuthProfileEntry.TABLE_NAME, null,
+                  itm.getContentValues());
     }
 
     private void alterTablesToReferProfile(SQLiteDatabase db) {
