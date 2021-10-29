@@ -185,7 +185,8 @@ public class DbHelper extends BaseDbHelper {
             SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID + " INTEGER," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD + " TEXT," +
             SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION + " INTEGER," +
-            SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE + " INTEGER)";
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE + " INTEGER," +
+            SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE + " INTEGER)";
 
         execSQL(db, SQL_CREATE_AUTHPROFILE_TABLE);
     }

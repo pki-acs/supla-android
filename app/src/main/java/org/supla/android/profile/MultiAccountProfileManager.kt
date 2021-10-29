@@ -20,6 +20,7 @@ package org.supla.android.profile
 
 import android.content.Context
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.db.DbHelper
 import org.supla.android.data.source.ProfileRepository
 
 class MultiAccountProfileManager(private val context: Context,
@@ -31,7 +32,8 @@ class MultiAccountProfileManager(private val context: Context,
     }
 
     override fun updateCurrentProfile(profile: AuthProfileItem) {
-        TODO()
+        repo.updateProfile(profile)
+        DbHelper.getInstance(context).deleteUserIcons()
     } 
 
     override fun getCurrentAuthInfo(): AuthInfo {

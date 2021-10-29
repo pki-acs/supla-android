@@ -41,15 +41,6 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
 
     val accessID : MutableLiveData<String>
 
-/*().apply {
-        addSource(cfgData.accessID) { value ->
-                                 if(value != null && value > 0) {
-                                     setValue(value.toString())
-                                 } else {
-                                     setValue("")
-                                 }
-                             }
-    }*/
 
     /**
      indicates that auth settings are changed.
@@ -137,17 +128,6 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         }
         isAdvancedMode.observeForever(_advancedObserver)
 
-/*             
-             try {
-                 val intval = it.toInt()
-                 if((cfgData.accessID.value ?: 0) != intval) {
-                     cfgData.accessID.value = intval
-                 }
-             } catch(_: NumberFormatException) {
-                 // ignored
-             }
-        }*/
-
     }
 
     override fun onCleared() {
@@ -209,6 +189,27 @@ class CfgViewModel(private val repository: CfgRepository): ViewModel() {
         if(isDirty.value == true) {
             repository.storeCfg(cfgData)
             _didSaveConfig.value = true
+        }
+
+        if(_authSettingsChanged) {
+            val app = SuplaApp.getApp()
+            val pm = app.getProfileManager(app)
+            val profile = pm.getCurrentProfile()
+
+            profile.authInfo.emailAuth = _authByEmail.value!!
+            try {
+                profile.authInfo.accessID = accessID.value?.toInt() ?: 0
+            } catch(_: NumberFormatException) {
+                profile.authInfo.accessID = 0
+            }
+            profile.authInfo.serverAutoDetect = serverAutoDiscovery.value ?: true
+            profile.authInfo.emailAddress = emailAddress.value ?: ""
+            profile.authInfo.serverForEmail = serverAddrEmail.value ?: ""
+            profile.authInfo.serverForAccessID = serverAddrAccessID.value ?: ""
+            profile.authInfo.accessIDpwd = accessIDpwd.value ?: ""
+            profile.advancedAuthSetup = isAdvancedMode.value ?: false
+            
+            pm.updateCurrentProfile(profile)
         }
     }
 
