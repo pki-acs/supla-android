@@ -65,9 +65,9 @@ class ProfileMigrator(private val ctx: Context) {
         val protoVer = prefs.getInt(pref_proto_ver, if(client != null) 
                                     client.getMaxProtoVersion() else 0)        
         
-        val ai = AuthInfo(emailAuth = !isAdvanced, 
-                          serverAutoDetect = !isAdvanced && 
-                          (serverAddr?.isEmpty() ?: false),
+        val ai = AuthInfo(emailAuth = !isAdvanced,
+                          emailAddress = email,
+                          serverAutoDetect = !isAdvanced,
                           serverForEmail = if(isAdvanced) "" else serverAddr,
                           serverForAccessID = if(isAdvanced) serverAddr else "",
                           accessID = accessID,
