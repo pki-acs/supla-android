@@ -18,23 +18,21 @@ package org.supla.android
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import android.os.Bundle
-import androidx.navigation.findNavController
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.view.View
+import androidx.fragment.app.Fragment
 
-class AppActivity: BaseActivity() {
+class MainFragment: Fragment() {
 
-    override fun onCreate(sis: Bundle?) {
-        super.onCreate(sis)
-        setContentView(R.layout.activity_app)
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-
-        if(!Preferences(this).configIsSet()) {
-            findNavController(R.id.nav_host_fragment)
-                .navigate(R.id.action_main_auth)
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 }
+

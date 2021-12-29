@@ -22,6 +22,7 @@ package org.supla.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.content.Intent;
 import android.view.Display;
 import android.widget.TextView;
 
@@ -57,14 +58,18 @@ public class StartActivity extends Activity {
         (new Handler()).postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
+                Intent i = new Intent(StartActivity.this,
+                                      AppActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+/*
                 if (prefs.configIsSet()) {
                     NavigationActivity.showMain(startActivity);
                 } else {
                     NavigationActivity.showProfile(startActivity);
                 }
-
+*/
             }
         }, 100);
 

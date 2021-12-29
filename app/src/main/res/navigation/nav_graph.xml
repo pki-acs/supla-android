@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:app="http://schemas.android.com/apk/res-auto"
-	    app:startDestination="@id/cfgAuth"
+	    app:startDestination="@id/mainScreen"
 	    android:id="@+id/nav_graph">
+
+<!-- Status is activity still
+  <action android:id="@+id/action_global_status"
+    app:destination="" />
+-->
+  <fragment
+      android:id="@+id/mainScreen"
+      android:name="org.supla.android.MainFragment"
+      android:label="@string/menubar_title">
+    <action android:id="@+id/action_main_auth"
+            app:destination="@id/cfgAuth" />
+  </fragment>
   <fragment
       android:id="@+id/cfgAuth"
       android:name="org.supla.android.cfg.AuthFragment"

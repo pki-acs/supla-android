@@ -14,13 +14,17 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.FragmentAuthBinding
 
 class AuthFragment: Fragment() {
-        private val viewModel: CfgViewModel by activityViewModels()
+    private val viewModel: CfgViewModel by viewModels {
+        val ctx = requireContext()
+        CfgViewModelFactory(PrefsCfgRepositoryImpl(ctx),
+                            SuplaApp.getApp().getProfileManager(ctx))
+    }
     private lateinit var binding: FragmentAuthBinding
 
     /*
