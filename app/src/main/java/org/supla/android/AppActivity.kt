@@ -19,13 +19,47 @@ package org.supla.android
  */
 
 import android.os.Bundle
+import android.os.Build
+import android.view.WindowManager
+import android.view.View
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.fragment.NavHostFragment
+import org.supla.android.databinding.ActivityAppBinding
+import org.supla.android.ui.AppBar
 
-class AppActivity: BaseActivity() {
+class AppActivity: BaseActivity(), NavController.OnDestinationChangedListener {
+
+    private lateinit var binding: ActivityAppBinding
+    private lateinit var ctrl: NavController
 
     override fun onCreate(sis: Bundle?) {
         super.onCreate(sis)
-        setContentView(R.layout.activity_app)
+
+        binding = DataBindingUtil.setContentView(this,
+                                                 R.layout.activity_app)
+        binding.lifecycleOwner = this
+        val navToolbar: AppBar = binding.navToolbar
+        setSupportActionBar(navToolbar)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+           window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+           window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+           window.setStatusBarColor(ResourcesCompat.getColor(getResources(),
+               R.color.splash_bg, null));
+        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        ctrl = navHostFragment.navController
+        val cfg = AppBarConfiguration(ctrl.graph)
+        NavigationUI.setupWithNavController(navToolbar,
+                                            ctrl, cfg)
+
+        ctrl.addOnDestinationChangedListener(this)
     }
 
 
@@ -33,8 +67,46 @@ class AppActivity: BaseActivity() {
         super.onResume()
 
         if(!Preferences(this).configIsSet()) {
-            findNavController(R.id.nav_host_fragment)
-                .navigate(R.id.action_main_auth)
+            ctrl.popBackStack(R.id.mainScreen, true)
+//            ctrl.clearBackStack(R.id.mainScreen)
+        android.util.Log.i("SuplaNav", " nav stack entry: " +  ctrl.currentBackStackEntry)
+            ctrl.navigate(R.id.cfgAuth)
+       //    ctrl.navigate(R.id.action_main_auth)
+        }
+
+        configureNavBar()
+    }
+
+    override public fun onDestinationChanged(ctrl: NavController,
+                                             dest: NavDestination,
+                                             args: Bundle?) {
+        var navBarVisible = true
+        if(dest.id == R.id.cfgAuth) {
+            val pm = SuplaApp.getApp().getProfileManager(this)
+            if(!pm.getCurrentAuthInfo().isAuthDataComplete) {
+                navBarVisible = false
+            }
+        }
+        android.util.Log.i("SuplaNav", " dest changed to: " + dest)
+        android.util.Log.i("SuplaNav", " nav stack entry: " +  ctrl.currentBackStackEntry)
+//        binding.navToolbar.setVisibility(if(navBarVisible) View.VISIBLE else View.GONE)
+
+configureNavBar()
+    }
+
+    private fun configureNavBar() {
+        val cd = ctrl.currentDestination
+        val pe = ctrl.previousBackStackEntry
+        if(cd == null) { return }
+        if(cd.id == R.id.mainScreen) {
+            binding.navToolbar.setNavigationIcon(R.drawable.hamburger)
+        } else {
+            if(pe == null) {
+                binding.navToolbar.setNavigationIcon(null)
+            } else {
+                binding.navToolbar.setNavigationIcon(R.drawable.navbar_back)
+            }
         }
     }
+
 }
