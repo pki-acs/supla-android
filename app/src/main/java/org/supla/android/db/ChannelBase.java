@@ -225,6 +225,12 @@ public abstract class ChannelBase extends DbItem {
         return SuplaConst.getNotEmptyCaption(getCaption(), getFunc(), context);
     }
 
+    public boolean supportsCountdownTimer() {
+        return (Flags & SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) ==
+            SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED;
+    }
+
+
     protected int imgActive(ChannelValue value) {
 
         if (value == null || !getOnLine()) {
@@ -764,5 +770,4 @@ public abstract class ChannelBase extends DbItem {
         First,
         Second
     }
-
 }

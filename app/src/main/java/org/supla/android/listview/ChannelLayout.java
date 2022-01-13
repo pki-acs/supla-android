@@ -62,8 +62,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     private ChannelListView mParentListView;
     private RelativeLayout content;
-    private FrameLayout right_btn;
+    private LinearLayout right_btn;
     private FrameLayout left_btn;
+    private FrameLayout adv_btn_meter;
+    private FrameLayout adv_btn_timer;
 
     private RelativeLayout channelIconContainer;
 
@@ -85,6 +87,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
     private boolean RightButtonEnabled;
     private boolean LeftButtonEnabled;
+    private boolean AdvancedButtonViewEnabled;
     private boolean DetailSliderEnabled;
 
     private float heightScaleFactor = 1f;
@@ -102,9 +105,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         mParentListView = parentListView;
         setBackgroundColor(getResources().getColor(R.color.channel_cell));
 
-        right_btn = new FrameLayout(context);
+        right_btn = new LinearLayout(context);
         left_btn = new FrameLayout(context);
 
+        right_btn.setOrientation(LinearLayout.HORIZONTAL);
         shouldUpdateChannelStateLayout = true;
 
         heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
@@ -631,7 +635,10 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
         boolean OldGroup = mGroup;
         mGroup = cbase instanceof ChannelGroup;
 
-        
+        if((cbase.getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) ==
+           SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) {
+            android.util.Log.i("SuplaTimer", "timer supported for: " + cbase);
+        }
 
         imgl.setImage(cbase.getImageIdx(ChannelBase.WhichOne.First),
                 cbase.getImageIdx(ChannelBase.WhichOne.Second));
@@ -824,7 +831,7 @@ public class ChannelLayout extends LinearLayout implements View.OnLongClickListe
 
             setLeftButtonEnabled(lenabled && cbase.getOnLine());
             setRightButtonEnabled(renabled && cbase.getOnLine());
-            setDetailSliderEnabled(dslider && cbase.getOnLine());
+            setDetailSliderEnabled(cbase.getOnLine());
 
 
         }

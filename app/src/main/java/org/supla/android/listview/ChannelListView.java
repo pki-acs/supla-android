@@ -35,6 +35,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.supla.android.ChannelDetailDigiglass;
 import org.supla.android.ChannelDetailEM;
@@ -45,8 +46,11 @@ import org.supla.android.ChannelDetailTempHumidity;
 import org.supla.android.ChannelDetailTemperature;
 import org.supla.android.ChannelDetailThermostat;
 import org.supla.android.ChannelDetailThermostatHP;
+import org.supla.android.detailview.ChannelDetailControl;
+import org.supla.android.detailview.DetailViewModel;
 import org.supla.android.R;
 import org.supla.android.Trace;
+import org.supla.android.MainActivity;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
@@ -116,11 +120,13 @@ public class ChannelListView extends ListView implements
 
     private DetailLayout getDetailLayout(ChannelBase cbase) {
         Channel channel = null;
+        android.util.Log.i("Supla", "getDetailLayout for: " + cbase.getFunc());
         if (cbase instanceof Channel) {
             channel = (Channel)cbase;
         }
 
         if (mDetailLayout != null) {
+            mDetailLayout = null; // TODO: be smarter here
             switch (cbase.getFunc()) {
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
                 case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
@@ -266,7 +272,27 @@ public class ChannelListView extends ListView implements
                     break;
             }
 
+            if(mDetailLayout == null) {
+                /* Add default control detail view for channels
+                   with control functions without specialized
+                   detail view. */
+                android.util.Log.i("Supla", "getDetailLayout control: " + cbase.getFunc());
+                switch(cbase.getFunc()) {
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+                case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+                case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+                case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+                case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+                    mDetailLayout = new ChannelDetailControl(getContext(), this);
+                }
+            }
+
             if (mDetailLayout != null) {
+
+                mDetailLayout.setBaseViewModel(getBaseViewModel());
 
                 if (getParent() instanceof ViewGroup) {
                     ((ViewGroup) getParent()).addView(mDetailLayout);
@@ -982,6 +1008,11 @@ public class ChannelListView extends ListView implements
             mDetailLayout.OnChannelDataChanged();
     }
 
+
+    public void detail_OnToggleCountDownTimerView(boolean shouldShowCDTV) {
+        //TODO: implementation pending
+    }
+    
     public interface OnChannelButtonClickListener {
         void onChannelStateButtonClick(ChannelListView clv, int remoteId);
     }
@@ -1012,5 +1043,10 @@ public class ChannelListView extends ListView implements
         } else {
             return false;
         }            
+    }
+
+    private DetailViewModel getBaseViewModel() {
+        MainActivity act = (MainActivity)getContext();
+        return new ViewModelProvider(act).get(DetailViewModel.class);
     }
 }

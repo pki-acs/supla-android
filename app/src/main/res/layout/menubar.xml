@@ -7,7 +7,7 @@
     android:background="@color/menubar">
 
 
-    <Button
+    <android.widget.Button
         android:id="@+id/menubutton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="45dp"
@@ -52,17 +52,31 @@
         android:textSize="18dp"
         android:visibility="invisible" />
 
-    <Button
-        android:id="@+id/groupbutton"
-        style="?android:attr/borderlessButtonStyle"
+    <FrameLayout 
+        android:id="@+id/actionButtonContainer"
         android:layout_width="45dp"
+        android:layout_marginRight="10dp"
         android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/groupoff"
-        android:clickable="true" />
+        android:layout_centerVertical="true">
 
+      <android.widget.Button
+          android:id="@+id/groupbutton"
+          style="?android:attr/borderlessButtonStyle"
+          android:layout_width="45dp"
+          android:layout_height="45dp"
+          android:layout_gravity="center_vertical|right"
+          android:background="@drawable/groupoff"
+          android:clickable="true" />
+
+      <android.widget.Button
+          android:id="@+id/countdownViewButton"
+          style="?android:attr/borderlessButtonStyle"
+          android:visibility="gone"
+          android:layout_width="45dp"
+          android:layout_height="45dp"
+          android:layout_gravity="center"
+          android:background="@drawable/countdown_btn" />
+    </FrameLayout>
 </RelativeLayout>

@@ -52,6 +52,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     private ViewGroup Content;
     private Button MenuButton;
     private Button GroupButton;
+    private Button CountDownViewButton;
     private boolean Anim = false;
     private SuperuserAuthorizationDialog mAuthDialog;
     private TextView title;
@@ -168,6 +169,9 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
             GroupButton.setOnClickListener(this);
             GroupButton.setTag(0);
 
+            CountDownViewButton = findViewById(R.id.countdownViewButton);
+            CountDownViewButton.setOnClickListener(this);
+            CountDownViewButton.setTag(1);
         }
 
         return MenuBarLayout;
@@ -219,6 +223,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void showMenuButton() {
+        android.util.Log.i("SuplaNav", "showMenuButton()");
         getMenuBarLayout();
         setBtnBackground(MenuButton, R.drawable.menu);
         MenuButton.setVisibility(View.VISIBLE);
@@ -229,6 +234,7 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void showBackButton() {
+        android.util.Log.i("SuplaNav", "showBackButton()");
         getMenuBarLayout();
         setBtnBackground(MenuButton, R.drawable.back);
         MenuButton.setVisibility(View.VISIBLE);
@@ -237,9 +243,14 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     public void hideMenuButton() {
+        android.util.Log.i("SuplaNav", "hideMenuButton()");
         getMenuBarLayout();
         MenuButton.setVisibility(View.GONE);
         GroupButton.setVisibility(View.GONE);
+    }
+
+    public void setCounterButtonVisible(boolean visible) {
+        CountDownViewButton.setVisibility(visible?View.VISIBLE:View.GONE);
     }
 
     public void setMenubarDetailTitle(String txt) {
@@ -250,6 +261,10 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
     }
 
     protected void onGroupButtonTouch(boolean On) {
+    }
+
+    protected void onCountDownButtonTouch(Button btn) {
+        CountDownViewButton.setSelected(!CountDownViewButton.isSelected());
     }
 
     public boolean menuIsVisible() {
@@ -437,6 +452,8 @@ public class NavigationActivity extends BaseActivity implements View.OnClickList
 
             setBtnBackground(GroupButton, img);
             onGroupButtonTouch(img == R.drawable.groupon);
+        } else if (v == CountDownViewButton) {
+            onCountDownButtonTouch(CountDownViewButton);
         } else {
             switch (MenuItemsLayout.getButtonId(v)) {
                 case MenuItemsLayout.BTN_SETTINGS:

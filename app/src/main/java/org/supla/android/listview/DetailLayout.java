@@ -31,13 +31,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import org.supla.android.SuplaApp;
+import org.supla.android.detailview.DetailBase;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 
 
-public abstract class DetailLayout extends FrameLayout {
+public abstract class DetailLayout extends DetailBase {
 
     protected DbHelper DBH;
     private ChannelListView cLV;
@@ -102,8 +103,9 @@ public abstract class DetailLayout extends FrameLayout {
 
     public abstract void OnChannelDataChanged();
 
+    @Override
     public void setData(ChannelBase cbase) {
-        channelBase = cbase;
+        super.setData(cbase);
         mRemoteId = cbase == null ? 0 : cbase.getRemoteId();
         Group = mRemoteId != 0 && cbase instanceof ChannelGroup;
     }
@@ -143,10 +145,6 @@ public abstract class DetailLayout extends FrameLayout {
         return mRemoteId;
     }
 
-    public ChannelBase getChannelBase() {
-        return channelBase;
-    }
-
     public boolean isGroup() {
         return Group;
     }
@@ -155,11 +153,6 @@ public abstract class DetailLayout extends FrameLayout {
         return cLV.isDetailVisible();
     }
 
-    public void onDetailShow() {
-    }
-
-    public void onDetailHide() {
-    }
 
     public SuplaClient getClient(boolean force) {
         SuplaClient client = SuplaApp.getApp().getSuplaClient();
@@ -188,7 +181,7 @@ public abstract class DetailLayout extends FrameLayout {
 
     public void deviceCalCfgRequest(int cmd, Byte data) {
         byte[] arr = new byte[1];
-        arr[0] = data == null ? 0 : data.byteValue();
+       arr[0] = data == null ? 0 : data.byteValue();
 
         deviceCalCfgRequest(cmd, 0, data == null ? null : arr);
     }
@@ -213,5 +206,9 @@ public abstract class DetailLayout extends FrameLayout {
 
     public boolean detailWillHide(boolean offlineReason) {
         return true;
+    }
+
+    private boolean channelSupportsCountdownTimer() {
+        return getChannelBase().supportsCountdownTimer();
     }
 }

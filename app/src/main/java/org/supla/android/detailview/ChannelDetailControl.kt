@@ -1,5 +1,4 @@
-package org.supla.android.cfg
-
+package org.supla.android.detailview
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,18 +18,20 @@ package org.supla.android.cfg
  */
 
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModel
+import android.content.Context
+import android.view.View
+import org.supla.android.listview.ChannelListView
+import org.supla.android.listview.DetailLayout
 
-import org.supla.android.profile.ProfileManager
+class ChannelDetailControl(ctx: Context,
+                           cLV: ChannelListView): DetailLayout(ctx, cLV) {
 
-class CfgViewModelFactory(private val repository: CfgRepository,
-                          private val profileManager: ProfileManager): ViewModelProvider.Factory {
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
-	      if(modelClass.isAssignableFrom(CfgViewModel::class.java)) {
-	          return CfgViewModel(repository, profileManager) as T
-	      } else {
-	          throw IllegalArgumentException("unknown view model class")
-	      }
+    override fun OnChannelDataChanged() {
+        // no-op
     }
+
+    override fun inflateContentView(): View {
+        return View(getContext())
+    }
+
 }

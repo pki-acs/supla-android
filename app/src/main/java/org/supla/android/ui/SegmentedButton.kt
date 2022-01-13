@@ -33,8 +33,9 @@ import org.supla.android.R
 @SuppressWarnings("ResourceType")
 class SegmentedButton @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-): FrameLayout(ctx, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0, 
+    defStyleRes: Int = 0
+): FrameLayout(ctx, attrs, defStyleAttr, defStyleRes) {
     
     private val elevation: Float
 

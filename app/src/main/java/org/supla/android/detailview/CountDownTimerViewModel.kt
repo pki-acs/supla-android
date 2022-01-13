@@ -1,5 +1,4 @@
-package org.supla.android.cfg
-
+package org.supla.android.detailview
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,18 +18,11 @@ package org.supla.android.cfg
  */
 
 
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
-import org.supla.android.profile.ProfileManager
+class CountDownTimerViewModel: ViewModel() {
 
-class CfgViewModelFactory(private val repository: CfgRepository,
-                          private val profileManager: ProfileManager): ViewModelProvider.Factory {
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
-	      if(modelClass.isAssignableFrom(CfgViewModel::class.java)) {
-	          return CfgViewModel(repository, profileManager) as T
-	      } else {
-	          throw IllegalArgumentException("unknown view model class")
-	      }
-    }
+
 }

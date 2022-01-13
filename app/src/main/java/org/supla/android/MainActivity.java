@@ -34,6 +34,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Button;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -50,6 +52,7 @@ import org.supla.android.listview.ListViewCursorAdapter;
 import org.supla.android.listview.draganddrop.ListViewDragListener;
 import org.supla.android.restapi.DownloadUserIcons;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.detailview.DetailViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -287,6 +290,15 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
             .unregisterOnSharedPreferenceChangeListener(this);
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onCountDownButtonTouch(Button btn) {
+        super.onCountDownButtonTouch(btn);
+        DetailViewModel vm = new ViewModelProvider(this)
+            .get(DetailViewModel.class);
+        boolean act = btn.isSelected();
+        vm.onSetCountDownTimerViewActive(act);
     }
 
     private void runDownloadTask() {
@@ -641,6 +653,13 @@ public class MainActivity extends NavigationActivity implements OnClickListener,
     public void onChannelDetailShow(ChannelBase channel) {
         setMenubarDetailTitle(channel.getNotEmptyCaption(this));
         showBackButton();
+        
+        
+        /*
+        if(channel.supportsCountdownTimer() &&
+          channel.hasMeter()) {
+            showNavBarAction(switchToTimer);
+        }*/
     }
 
     @Override
